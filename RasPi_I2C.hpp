@@ -24,7 +24,8 @@
  * IN THE SOFTWARE.
  */
 #include <linux/i2c-dev.h>
-#include <sys/ioctl.h> // for open
+#include <sys/ioctl.h> // for open,close,fsync,etc.
+#include "I2CBase.hpp"
 
 class RasPi_I2C: public I2CBase {
     public:
