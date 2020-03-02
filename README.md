@@ -8,7 +8,7 @@ Library for the LSM9DS1 IMU.
 
 This is a C++ library for the ST Microelectronics LSM9DS1 inertial module. This module has 9DOF (3D accelerometer, 3D gyroscope, and 3d magnetometer) and supports both I2C and SPI for communication.
 
-This library is planned to eventually support all features of the LSM9DS1, including both I2C and SPI. It was designed to be used on a Raspberry Pi, but should work on any other device which supports I2C or SPI by modifying I2CWrapper.cpp and SPIWrapper.cpp.
+This library is planned to eventually support all features of the LSM9DS1, including both I2C and SPI. It was designed to be used on a Raspberry Pi, but should work on any other device which supports I2C or SPI by creating a new class that implements I2C/SPIBase.cpp.
 
 
 ### Development Progress
