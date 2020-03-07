@@ -23,8 +23,11 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#include <linux/i2c-dev.h>
-#include <sys/ioctl.h> // for open,close,fsync,etc.
+//#include <linux/i2c-dev.h> // not working
+#include <unistd.h>
+//#include <sys/ioctl.h> // for open,close,fsync,etc. ; not working
+#include <fcntl.h> // used for open,close,etc.
+#include "i2c-dev.h"
 #include "I2CBase.hpp"
 
 class RasPi_I2C: public I2CBase {
@@ -69,16 +72,17 @@ class RasPi_I2C: public I2CBase {
          * Reads and returns 'n' BYTEs starting from a register on the I2C
          * device.
          */
-        BYTE[] readBytes(BYTE reg_add, int numBytes) {
-            BYTE vals[numBytes];
-            actNumBytes = i2c_smbus_read_i2d_block_data(dev_fd, reg_add,
-                    numBytes, &vals);
+        BYTE* readBytes(BYTE reg_add, int numBytes) {
+            BYTE* vals = new BYTE[numBytes];
+            int actNumBytes = i2c_smbus_read_i2c_block_data(dev_fd, reg_add,
+                    numBytes, vals);
             if (actNumBytes < numBytes) {
                 // Read fewer bytes than requested, trim vals array.
-                BYTE valsTrimmed[actNumBytes];
+                BYTE* valsTrimmed = new BYTE[actNumBytes];
                 for (int i = 0; i < actNumBytes; i++) {
                     valsTrimmed[i] = vals[i];
                 }
+                delete vals;
                 return valsTrimmed;
             }
             return vals;

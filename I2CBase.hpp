@@ -49,7 +49,7 @@ class I2CBase {
          * Reads and returns multiple bytes stored in consecutive registers,
          * starting from a particular address.
          */
-        virtual BYTE[] readBytes(BYTE reg_add, int num) = 0;
+        virtual BYTE* readBytes(BYTE reg_add, int num) = 0;
 
         /**
          * Writes to a register at a particular address.
