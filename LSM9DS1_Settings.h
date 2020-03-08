@@ -1,8 +1,8 @@
 /*
- * LSM9DS1
+ * LSM9DS1 Settings
  * Copyright (c) 2020  Enlil Odisho
  * ------------------------------------------------
- * Class for LSM9DS1 sensor.
+ * Contains the customizable settings for the LSM9DS1 sensor.
  * 
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,33 +23,30 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#include "LSM9DS1.hpp"
-#include "LSM9DS1_Registers.h"
-#include <iostream> // logging
+#ifndef LSM9DS1_SETTINGS_H
+#define LSM9DS1_SETTINGS_H
 
 /**
- * Constructor.
+ * Acc&Gyro ODR Setting.
  */
-LSM9DS1::LSM9DS1() {
-    // TODO change the device address by changing pin to high
-    ag_add = LSM9DS1_AG_ADDRESS_1;
-    i2c_ag.init(ag_add);
-    std::cout << "Initialized LSM9DS1.\n";
-}
+enum AG_ODR {
+    AG_ODR_MASK = 0xE0,
+    AG_ODR_14_9 = 0x20,   // 14.9 Hz
+    AG_ODR_59_5 = 0x40,   // 59.5 Hz
+    AG_ODR_119  = 0x60,   // 119 Hz
+    AG_ODR_238  = 0x80,   // 238 Hz
+    AG_ODR_476  = 0xA0,   // 476 Hz
+    AG_ODR_952  = 0xC0    // 952 Hz
+};
 
 /**
- * Destructor.
+ * Gyro Scale Setting.
  */
-LSM9DS1::~LSM9DS1() {
-    i2c_ag.deinit();
-    std::cout << "Deinitialized LSM9DS1.\n";
-}
+enum G_SCALE {
+    G_SCALE_MASK = 0x18,
+    G_SCALE_245  = 0,     // 245 dps
+    G_SCALE_500  = 0x08,  // 500 dps
+    G_SCALE_2000 = 0x18   // 2000 dps
+};
 
-/**
- * Set the ODR for Acc and Gyro.
- */
-void LSM9DS1::set_ag_odr(AG_ODR odr) {
-    BYTE cur_regv = i2c_ag.readByte(CTRL_REG6_XL);
-    BYTE new_regv = (cur_regv & ~(AG_ODR::AG_ODR_MASK)) | odr;
-    i2c_ag.writeByte(CTRL_REG6_XL, new_regv);
-}
+#endif /* LSM9DS1_SETTINGS_H */

@@ -23,13 +23,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
+/**
+ * Use the term 'BYTE' to refer to type 'unsigned char'.
+ */
+typedef unsigned char BYTE;
+
 class I2CBase {
     public:
-        /**
-         * Use the term 'BYTE' to refer to type 'unsigned char'.
-         */
-        typedef unsigned char BYTE;
-
         /**
          * Initialize I2C.
          */
