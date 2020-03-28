@@ -49,4 +49,25 @@ enum G_SCALE {
     G_SCALE_2000 = 0x18   // 2000 dps
 };
 
+/**
+ * Status register masks.
+ */
+enum AG_STATUS {
+    AG_STATUS_TEMP_AVAIL = 0x04,
+    AG_STATUS_GYRO_AVAIL = 0x02,
+    AG_STATUS_ACC_AVAIL  = 0x01
+};
+
+/**
+ * CTRL_REG9 Settings.
+ */
+enum CTRL9_SETTINGS {
+    CTRL9_SLEEP_GYRO    = 0x40,
+    CTRL9_FIFO_TEMP_EN  = 0x10,
+    CTRL9_DRDY_EN       = 0x08,
+    CTRL9_I2C_DISABLE   = 0x04,
+    CTRL9_FIFO_EN       = 0x02,
+    CTRL9_STOP_ON_FTH   = 0x01
+};
+
 #endif /* LSM9DS1_SETTINGS_H */

@@ -53,3 +53,76 @@ void LSM9DS1::set_ag_odr(AG_ODR odr) {
     BYTE new_regv = (cur_regv & ~(AG_ODR::AG_ODR_MASK)) | odr;
     i2c_ag.writeByte(CTRL_REG6_XL, new_regv);
 }
+
+/**
+ * Set the Scale for Gyro.
+ */
+void LSM9DS1::set_g_scale(G_SCALE scale) {
+    BYTE cur_regv = i2c_ag.readByte(CTRL_REG6_XL);
+    BYTE new_regv = (cur_regv & ~(G_SCALE::G_SCALE_MASK)) | scale;
+    i2c_ag.writeByte(CTRL_REG6_XL, new_regv);
+}
+
+/**
+ * Turn data available bit on/off.
+ */
+void LSM9DS1::set_drdy_enable_bit(bool value) {
+    BYTE cur_regv = i2c_ag.readByte(CTRL_REG9);
+    BYTE new_regv = cur_regv;
+    if (value) {
+        new_regv |= CTRL9_DRDY_EN;
+    } else {
+        new_regv &= ~CTRL9_DRDY_EN;
+    }
+    i2c_ag.writeByte(CTRL_REG9, new_regv);
+}
+
+/**
+ * Get Data Available Bits.
+ */
+BYTE LSM9DS1::get_status_reg() {
+    return i2c_ag.readByte(STATUS_REG_1);
+}
+
+/**
+ * Return whether temperature data is available.
+ */
+bool LSM9DS1::is_temp_available(BYTE status) {
+    if (get_status_reg() & AG_STATUS_TEMP_AVAIL == AG_STATUS_TEMP_AVAIL) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Return whether gyroscope data is available.
+ */
+bool LSM9DS1::is_gyro_available(BYTE status) {
+    if (get_status_reg() & AG_STATUS_GYRO_AVAIL == AG_STATUS_GYRO_AVAIL) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Return whether accelerometer data is available.
+ */
+bool LSM9DS1::is_acc_available(BYTE status) {
+    if (get_status_reg() & AG_STATUS_ACC_AVAIL == AG_STATUS_ACC_AVAIL) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Gets and returns the linear acceleration from the output registers.
+ */
+struct SensorData LSM9DS1::get_linear_acc() {
+    struct SensorData acc;
+    BYTE* data = i2c_ag.readBytes(OUT_X_L_XL, 6);
+    acc.x = (data[1] << 8) | data[0];
+    acc.y = (data[3] << 8) | data[2];
+    acc.z = (data[5] << 8) | data[4];
+    delete data;
+    return acc;
+}
