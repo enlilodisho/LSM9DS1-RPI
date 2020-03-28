@@ -32,6 +32,7 @@ class LSM9DS1 {
         void set_drdy_enable_bit(bool value); // turn feature on/off
 
         struct SensorData get_linear_acc();
+        struct SensorData get_angular_rate();
 
         BYTE get_status_reg();
         bool is_temp_available(BYTE status);

@@ -49,18 +49,18 @@ LSM9DS1::~LSM9DS1() {
  * Set the ODR for Acc and Gyro.
  */
 void LSM9DS1::set_ag_odr(AG_ODR odr) {
-    BYTE cur_regv = i2c_ag.readByte(CTRL_REG6_XL);
+    BYTE cur_regv = i2c_ag.readByte(CTRL_REG1_G);
     BYTE new_regv = (cur_regv & ~(AG_ODR::AG_ODR_MASK)) | odr;
-    i2c_ag.writeByte(CTRL_REG6_XL, new_regv);
+    i2c_ag.writeByte(CTRL_REG1_G, new_regv);
 }
 
 /**
  * Set the Scale for Gyro.
  */
 void LSM9DS1::set_g_scale(G_SCALE scale) {
-    BYTE cur_regv = i2c_ag.readByte(CTRL_REG6_XL);
+    BYTE cur_regv = i2c_ag.readByte(CTRL_REG1_G);
     BYTE new_regv = (cur_regv & ~(G_SCALE::G_SCALE_MASK)) | scale;
-    i2c_ag.writeByte(CTRL_REG6_XL, new_regv);
+    i2c_ag.writeByte(CTRL_REG1_G, new_regv);
 }
 
 /**
@@ -112,6 +112,20 @@ bool LSM9DS1::is_acc_available(BYTE status) {
         return true;
     }
     return false;
+}
+
+/**
+ * Gets and returns the gyroscope data from the output registers.
+ * Note: X = pitch, y = roll, Z = yaw (stated in datasheet)
+ */
+struct SensorData LSM9DS1::get_angular_rate() {
+    struct SensorData gyro;
+    BYTE* data = i2c_ag.readBytes(OUT_X_L_G, 6);
+    gyro.x = (data[1] << 8) | data[0];
+    gyro.y = (data[3] << 8) | data[2];
+    gyro.z = (data[5] << 8) | data[4];
+    delete data;
+    return gyro;
 }
 
 /**
