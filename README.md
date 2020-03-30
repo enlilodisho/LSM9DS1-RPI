@@ -18,11 +18,15 @@ At the moment, this library is not yet functional to be used in your project. As
 I will first begin by implementing I2C. SPI support will come later.
 
 ##### Basic Capabilities
-* [ ] I2C Support
+* [x] I2C Support
 * [ ] SPI Support
-* [ ] Read accelerometer data
-* [ ] Read gyroscope data
+* [x] Read accelerometer data
+* [x] Read gyroscope data
 * [ ] Read magnetometer data
+##### Other Capabilities
+* [x] Data-ready bit
+* [x] Use FIFO feature
+* [x] Set INT1 & INT2 Pins
 
 
 ### License
