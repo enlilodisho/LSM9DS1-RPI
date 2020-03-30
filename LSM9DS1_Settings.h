@@ -59,6 +59,60 @@ enum AG_STATUS {
 };
 
 /**
+ * FIFO settings. (in FIFO_CTRL)
+ * TODO there are other modes in datasheet not listed here.
+ *      - Continuous mode until trigger is asserted, then FIFO mode.
+ *      - Bypass mode until trigger is deasserted, then Continuous mode.
+ */
+enum FIFO_MODE {
+    FIFO_MODE_MASK          = 0xE0,
+    FIFO_MODE_BYPASS        = 0,
+    FIFO_MODE_ON            = 0x20,
+    FIFO_MODE_ON_CONTINUOUS = 0xC0
+};
+enum FIFO_THRESHOLD {
+    FIFO_THRESHOLD_MASK     = 0x1F
+};
+
+/**
+ * FIFO status register.
+ */
+enum FIFO_STATUS {
+    FIFO_THRESHOLD_STATUS_MASK  = 0x80,
+    FIFO_OVERRUN_STATUS_MASK    = 0x40,
+    FIFO_NUM_UNREAD_MASK        = 0x3F
+};
+
+/**
+ * Set INT1 Pin.
+ */
+enum INT1_MODE {
+    INT1_OFF                = 0,
+    INT1_GYRO               = 0x80,
+    INT1_ACC                = 0x40,
+    INT1_FSS5               = 0x20,
+    INT1_OVERRUN            = 0x10,
+    INT1_FIFO_THRESHOLD     = 0x08,
+    INT1_BOOT_STATUS        = 0x04,
+    INT1_GYRO_DATA_READY    = 0x02,
+    INT1_ACC_DATA_READY     = 0x01
+};
+
+/**
+ * Set INT2 Pin.
+ */
+enum INT2_MODE {
+    INT2_OFF               = 0,
+    INT2_ACTIVITY          = 0x80,
+    INT2_FSS5              = 0x20,
+    INT2_OVERRUN           = 0x10,
+    INT2_FIFO_THRESHOLD    = 0x08,
+    INT2_TEMP_DATA_READY   = 0x04,
+    INT2_GYRO_DATA_READY   = 0x02,
+    INT2_ACC_DATA_READY    = 0x01
+};
+
+/**
  * CTRL_REG9 Settings.
  */
 enum CTRL9_SETTINGS {

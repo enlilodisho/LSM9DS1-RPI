@@ -64,6 +64,28 @@ void LSM9DS1::set_g_scale(G_SCALE scale) {
 }
 
 /**
+ * Set the int1 pin.
+ */
+void LSM9DS1::set_int1_pin(INT1_MODE int1Mode) {
+    BYTE new_regv = 0;
+    if (int1Mode != INT1_OFF) {
+        new_regv |= int1Mode;
+    }
+    i2c_ag.writeByte(INT1_CTRL, new_regv);
+}
+
+/**
+ * Set the int2 pin.
+ */
+void LSM9DS1::set_int2_pin(INT2_MODE int2Mode) {
+    BYTE new_regv = 0;
+    if (int2Mode != INT2_OFF) {
+        new_regv |= int2Mode;
+    }
+    i2c_ag.writeByte(INT2_CTRL, new_regv);
+}
+
+/**
  * Turn data available bit on/off.
  */
 void LSM9DS1::set_drdy_enable_bit(bool value) {
@@ -80,15 +102,96 @@ void LSM9DS1::set_drdy_enable_bit(bool value) {
 /**
  * Get Data Available Bits.
  */
-BYTE LSM9DS1::get_status_reg() {
+BYTE LSM9DS1::get_data_status_reg() {
     return i2c_ag.readByte(STATUS_REG_1);
+}
+
+/**
+ * Turn FIFO feature on/off.
+ */
+void LSM9DS1::set_fifo_enable_bit(bool value) {
+    BYTE cur_regv = i2c_ag.readByte(CTRL_REG9);
+    BYTE new_regv = cur_regv;
+    if (value) {
+        new_regv |= CTRL9_FIFO_EN;
+    } else {
+        new_regv &= ~CTRL9_FIFO_EN;
+    }
+    i2c_ag.writeByte(CTRL_REG9, new_regv);
+}
+
+/**
+ * Enable/disable storing of temperature in FIFO.
+ */
+void LSM9DS1::set_fifo_temp_enable_bit(bool value) {
+    BYTE cur_regv = i2c_ag.readByte(CTRL_REG9);
+    BYTE new_regv = cur_regv;
+    if (value) {
+        new_regv |= CTRL9_FIFO_TEMP_EN;
+    } else {
+        new_regv &= ~CTRL9_FIFO_TEMP_EN;
+    }
+    i2c_ag.writeByte(CTRL_REG9, new_regv);
+}
+
+/**
+ * Change FIFO mode.
+ */
+void LSM9DS1::set_fifo_mode(FIFO_MODE mode) {
+    BYTE cur_regv = i2c_ag.readByte(FIFO_CTRL);
+    BYTE new_regv = (cur_regv & ~(FIFO_MODE_MASK)) | mode;
+    i2c_ag.writeByte(FIFO_CTRL, new_regv);
+}
+
+/**
+ * Set the FIFO threshold level.
+ */
+void LSM9DS1::set_fifo_threshold(uint8_t threshold) {
+    if (threshold < 0 || threshold > 31) {
+        threshold = 0;
+    }
+    BYTE cur_regv = i2c_ag.readByte(FIFO_CTRL);
+    BYTE new_regv = (cur_regv & ~(FIFO_THRESHOLD_MASK)) | (threshold & FIFO_THRESHOLD_MASK);
+    i2c_ag.writeByte(FIFO_CTRL, new_regv);
+}
+
+BYTE LSM9DS1::get_fifo_status() {
+    return i2c_ag.readByte(FIFO_SRC);
+}
+
+/**
+ * Return whether FIFO filling is equal or higher than threshold level.
+ */
+bool LSM9DS1::is_fifo_threshold_reached(BYTE fifoStatus) {
+    if (fifoStatus & FIFO_THRESHOLD_STATUS_MASK == FIFO_THRESHOLD_STATUS_MASK) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Return whether FIFO overrun has occured.
+ */
+bool LSM9DS1::did_fifo_overrun(BYTE fifoStatus) {
+    if (fifoStatus & FIFO_OVERRUN_STATUS_MASK == FIFO_OVERRUN_STATUS_MASK) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Return the number of unread samples stored into FIFO.
+ */
+uint8_t LSM9DS1::get_num_fifo_unread(BYTE fifoStatus) {
+    BYTE numUnread = fifoStatus & FIFO_NUM_UNREAD_MASK;
+    return numUnread;
 }
 
 /**
  * Return whether temperature data is available.
  */
 bool LSM9DS1::is_temp_available(BYTE status) {
-    if (get_status_reg() & AG_STATUS_TEMP_AVAIL == AG_STATUS_TEMP_AVAIL) {
+    if (status & AG_STATUS_TEMP_AVAIL == AG_STATUS_TEMP_AVAIL) {
         return true;
     }
     return false;
@@ -98,7 +201,7 @@ bool LSM9DS1::is_temp_available(BYTE status) {
  * Return whether gyroscope data is available.
  */
 bool LSM9DS1::is_gyro_available(BYTE status) {
-    if (get_status_reg() & AG_STATUS_GYRO_AVAIL == AG_STATUS_GYRO_AVAIL) {
+    if (status & AG_STATUS_GYRO_AVAIL == AG_STATUS_GYRO_AVAIL) {
         return true;
     }
     return false;
@@ -108,7 +211,7 @@ bool LSM9DS1::is_gyro_available(BYTE status) {
  * Return whether accelerometer data is available.
  */
 bool LSM9DS1::is_acc_available(BYTE status) {
-    if (get_status_reg() & AG_STATUS_ACC_AVAIL == AG_STATUS_ACC_AVAIL) {
+    if (status & AG_STATUS_ACC_AVAIL == AG_STATUS_ACC_AVAIL) {
         return true;
     }
     return false;

@@ -27,14 +27,28 @@ class LSM9DS1 {
 
         void set_ag_odr(AG_ODR odr);
         void set_g_scale(G_SCALE scale);
+
+        // Interrupt pins
+        void set_int1_pin(INT1_MODE int1Mode);
+        void set_int2_pin(INT2_MODE int2Mode);
         
-        // ctrl_reg9
-        void set_drdy_enable_bit(bool value); // turn feature on/off
+        // Data ready
+        void set_drdy_enable_bit(bool value);
+
+        // FIFO
+        void set_fifo_enable_bit(bool value);
+        void set_fifo_temp_enable_bit(bool value);
+        void set_fifo_mode(FIFO_MODE mode);
+        void set_fifo_threshold(uint8_t threshold);
+        BYTE get_fifo_status();
+        bool is_fifo_threshold_reached(BYTE fifoStatus);
+        bool did_fifo_overrun(BYTE fifoStatus);
+        uint8_t get_num_fifo_unread(BYTE fifoStatus);
 
         struct SensorData get_linear_acc();
         struct SensorData get_angular_rate();
 
-        BYTE get_status_reg();
+        BYTE get_data_status_reg();
         bool is_temp_available(BYTE status);
         bool is_gyro_available(BYTE status);
         bool is_acc_available(BYTE status);
