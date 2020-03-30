@@ -31,12 +31,24 @@
  */
 enum AG_ODR {
     AG_ODR_MASK = 0xE0,
+    AG_ODR_0    = 0,      // Sensor off
     AG_ODR_14_9 = 0x20,   // 14.9 Hz
     AG_ODR_59_5 = 0x40,   // 59.5 Hz
     AG_ODR_119  = 0x60,   // 119 Hz
     AG_ODR_238  = 0x80,   // 238 Hz
     AG_ODR_476  = 0xA0,   // 476 Hz
     AG_ODR_952  = 0xC0    // 952 Hz
+};
+
+/**
+ * Acc Scale Setting.
+ */
+enum A_SCALE {
+    A_SCALE_MASK = 0x18,
+    A_SCALE_2    = 0,     // +/- 2G
+    A_SCALE_4    = 0x10,  // +/- 4G
+    A_SCALE_8    = 0x18,  // +/- 8G
+    A_SCALE_16   = 0x08   // +/- 16G
 };
 
 /**

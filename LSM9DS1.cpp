@@ -55,6 +55,15 @@ void LSM9DS1::set_ag_odr(AG_ODR odr) {
 }
 
 /**
+ * Set the scale for Acc.
+ */
+void LSM9DS1::set_a_scale(A_SCALE scale) {
+    BYTE cur_regv = i2c_ag.readByte(CTRL_REG6_XL);
+    BYTE new_regv = (cur_regv & ~(A_SCALE::A_SCALE_MASK)) | scale;
+    i2c_ag.writeByte(CTRL_REG6_XL, new_regv);
+}
+
+/**
  * Set the Scale for Gyro.
  */
 void LSM9DS1::set_g_scale(G_SCALE scale) {
