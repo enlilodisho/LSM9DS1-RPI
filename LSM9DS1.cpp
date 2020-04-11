@@ -252,3 +252,14 @@ struct SensorData LSM9DS1::get_linear_acc() {
     delete data;
     return acc;
 }
+
+/**
+ * Gets and returns the temperature from the output registers.
+ */
+int16_t LSM9DS1::get_temperature() {
+    int16_t temp;
+    BYTE* data = i2c_ag.readBytes(OUT_TEMP_L, 2);
+    temp = (data[1] << 8) | data[0];
+    delete data;
+    return temp;
+}

@@ -48,6 +48,7 @@ class LSM9DS1 {
 
         struct SensorData get_linear_acc();
         struct SensorData get_angular_rate();
+        int16_t get_temperature();
 
         BYTE get_data_status_reg();
         bool is_temp_available(BYTE status);
