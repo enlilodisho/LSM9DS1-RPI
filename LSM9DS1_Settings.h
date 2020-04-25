@@ -62,6 +62,27 @@ enum G_SCALE {
 };
 
 /**
+ * Mag Scale Setting.
+ */
+enum M_SCALE {
+    M_SCALE_MASK = 0x60,
+    M_SCALE_4   = 0,      // +/- 4 gauss
+    M_SCALE_8   = 0x20,   // +/- 8 gauss
+    M_SCALE_12  = 0x40,   // +/- 12 gauss
+    M_SCALE_16  = 0x60    // +/- 16 gauss
+};
+
+/**
+ * Mag Mode Setting.
+ */
+enum M_MODE {
+    M_MODE_MASK         = 0x03,
+    M_MODE_CONTINUOUS   = 0,
+    M_MODE_SINGLE       = 0x01,
+    M_MODE_POWERDOWN    = 0x03
+};
+
+/**
  * Status register masks.
  */
 enum AG_STATUS {

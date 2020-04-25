@@ -28,6 +28,9 @@ class LSM9DS1 {
         void set_ag_odr(AG_ODR odr);
         void set_a_scale(A_SCALE scale);
         void set_g_scale(G_SCALE scale);
+        void set_m_scale(M_SCALE scale);
+
+        void set_m_mode(M_MODE mode);
 
         // Interrupt pins
         void set_int1_pin(INT1_MODE int1Mode);
@@ -49,6 +52,7 @@ class LSM9DS1 {
         struct SensorData get_linear_acc();
         struct SensorData get_angular_rate();
         int16_t get_temperature();
+        struct SensorData get_mag_field();
 
         BYTE get_data_status_reg();
         bool is_temp_available(BYTE status);
@@ -56,7 +60,7 @@ class LSM9DS1 {
         bool is_acc_available(BYTE status);
     private:
         int ag_add, m_add;  // I2C address of acc/gyro and magnetometer.
-        RasPi_I2C i2c_ag;
+        RasPi_I2C i2c_ag, i2c_m;
 };
 
 #endif /* LSM9DS1_HPP */

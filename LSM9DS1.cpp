@@ -32,8 +32,13 @@
  */
 LSM9DS1::LSM9DS1() {
     // TODO change the device address by changing pin to high
+    
     ag_add = LSM9DS1_AG_ADDRESS_1;
     i2c_ag.init(ag_add);
+
+    m_add = LSM9DS1_M_ADDRESS_1;
+    i2c_m.init(m_add);
+
     std::cout << "Initialized LSM9DS1.\n";
 }
 
@@ -42,6 +47,7 @@ LSM9DS1::LSM9DS1() {
  */
 LSM9DS1::~LSM9DS1() {
     i2c_ag.deinit();
+    i2c_m.deinit();
     std::cout << "Deinitialized LSM9DS1.\n";
 }
 
@@ -70,6 +76,24 @@ void LSM9DS1::set_g_scale(G_SCALE scale) {
     BYTE cur_regv = i2c_ag.readByte(CTRL_REG1_G);
     BYTE new_regv = (cur_regv & ~(G_SCALE::G_SCALE_MASK)) | scale;
     i2c_ag.writeByte(CTRL_REG1_G, new_regv);
+}
+
+/**
+ * Set the scale for mag.
+ */
+void LSM9DS1::set_m_scale(M_SCALE scale) {
+    BYTE cur_regv = i2c_m.readByte(CTRL_REG2_M);
+    BYTE new_regv = (cur_regv & ~(M_SCALE::M_SCALE_MASK)) | scale;
+    i2c_m.writeByte(CTRL_REG2_M, new_regv);
+}
+
+/**
+ * Set the operating mode for the magnetometer.
+ */
+void LSM9DS1::set_m_mode(M_MODE mode) {
+    BYTE cur_regv = i2c_m.readByte(CTRL_REG3_M);
+    BYTE new_regv = (cur_regv & ~(M_MODE::M_MODE_MASK)) | mode;
+    i2c_m.writeByte(CTRL_REG3_M, new_regv);
 }
 
 /**
@@ -262,4 +286,17 @@ int16_t LSM9DS1::get_temperature() {
     temp = (data[1] << 8) | data[0];
     delete data;
     return temp;
+}
+
+/**
+ * Gets and returns the magnetic field data from the output registers.
+ */
+struct SensorData LSM9DS1::get_mag_field() {
+    struct SensorData mag;
+    BYTE* data = i2c_m.readBytes(OUT_X_L_M, 6);
+    mag.x = (data[1] << 8) | data[0];
+    mag.y = (data[3] << 8) | data[2];
+    mag.z = (data[5] << 8) | data[4];
+    delete data;
+    return mag;
 }
