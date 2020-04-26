@@ -23,6 +23,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef RASPI_GPIO_HPP
+#define RASPI_GPIO_HPP
+
 #include <fcntl.h> // used for open,close,etc.
 #include "GPIOBase.hpp"
 
@@ -130,3 +133,5 @@ class RasPi_GPIO: public GPIOBase {
             return std::string(val);
         }
 };
+
+#endif /* RASPI_GPIO_HPP */

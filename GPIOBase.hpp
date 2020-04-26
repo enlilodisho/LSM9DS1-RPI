@@ -23,6 +23,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef GPIO_BASE_HPP
+#define GPIO_BASE_HPP
+
 #include <string>
 
 class GPIOBase {
@@ -73,3 +76,5 @@ class GPIOBase {
          */
         virtual PinState getPinState(std::string pin) = 0;
 };
+
+#endif /* GPIO_BASE_HPP */

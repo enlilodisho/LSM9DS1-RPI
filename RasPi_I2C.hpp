@@ -23,6 +23,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef RASPI_I2C_HPP
+#define RASPI_I2C_HPP
+
 //#include <linux/i2c-dev.h> // not working
 #include <unistd.h>
 //#include <sys/ioctl.h> // for open,close,fsync,etc. ; not working
@@ -106,3 +109,5 @@ class RasPi_I2C: public I2CBase {
          */
         BYTE dev_add;
 };
+
+#endif /* RASPI_I2C_HPP */

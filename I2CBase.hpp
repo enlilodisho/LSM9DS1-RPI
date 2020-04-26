@@ -23,6 +23,8 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef I2C_BASE_HPP
+#define I2C_BASE_HPP
 
 /**
  * Use the term 'BYTE' to refer to type 'unsigned char'.
@@ -57,3 +59,5 @@ class I2CBase {
          */
         virtual void writeByte(BYTE reg_add, BYTE reg_val) = 0;
 };
+
+#endif /* I2C_BASE_HPP */
