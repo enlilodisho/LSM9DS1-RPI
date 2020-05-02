@@ -26,11 +26,15 @@ class LSM9DS1 {
         ~LSM9DS1(); // destructor
 
         void set_ag_odr(AG_ODR odr);
+        void set_m_odr(M_ODR odr);
         void set_a_scale(A_SCALE scale);
         void set_g_scale(G_SCALE scale);
         void set_m_scale(M_SCALE scale);
 
         void set_m_mode(M_MODE mode);
+        void set_m_temp_compensate(bool value);
+        void set_m_xy_performance(M_XY_PERFORMANCE performance);
+        void set_m_z_performance(M_Z_PERFORMANCE performance);
 
         // Interrupt pins
         void set_int1_pin(INT1_MODE int1Mode);

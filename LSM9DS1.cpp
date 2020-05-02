@@ -61,6 +61,15 @@ void LSM9DS1::set_ag_odr(AG_ODR odr) {
 }
 
 /**
+ * Set the ODR for magnetometer.
+ */
+void LSM9DS1::set_m_odr(M_ODR odr) {
+    BYTE cur_regv = i2c_m.readByte(CTRL_REG1_M);
+    BYTE new_regv = (cur_regv & ~(M_ODR::M_ODR_MASK)) | odr;
+    i2c_m.writeByte(CTRL_REG1_M, new_regv);
+}
+
+/**
  * Set the scale for Acc.
  */
 void LSM9DS1::set_a_scale(A_SCALE scale) {
@@ -94,6 +103,38 @@ void LSM9DS1::set_m_mode(M_MODE mode) {
     BYTE cur_regv = i2c_m.readByte(CTRL_REG3_M);
     BYTE new_regv = (cur_regv & ~(M_MODE::M_MODE_MASK)) | mode;
     i2c_m.writeByte(CTRL_REG3_M, new_regv);
+}
+
+/**
+ * Set temperature compensation mode for mag.
+ */
+void LSM9DS1::set_m_temp_compensate(bool value) {
+    BYTE cur_regv = i2c_m.readByte(CTRL_REG1_M);
+    BYTE new_regv = cur_regv;
+    if (value) {
+        new_regv |= M_TEMP_COMPENSATE_MASK;
+    } else {
+        new_regv &= ~M_TEMP_COMPENSATE_MASK;
+    }
+    i2c_m.writeByte(CTRL_REG1_M, new_regv);
+}
+
+/**
+ * Set the operative mode for mag x/y axis.
+ */
+void LSM9DS1::set_m_xy_performance(M_XY_PERFORMANCE performance) {
+    BYTE cur_regv = i2c_m.readByte(CTRL_REG1_M);
+    BYTE new_regv = (cur_regv & ~(M_XY_PERFORMANCE_MASK)) | performance;
+    i2c_m.writeByte(CTRL_REG1_M, new_regv);
+}
+
+/**
+ * Set the operative mode for mag z axis.
+ */
+void LSM9DS1::set_m_z_performance(M_Z_PERFORMANCE performance) {
+    BYTE cur_regv = i2c_m.readByte(CTRL_REG4_M);
+    BYTE new_regv = (cur_regv & ~(M_Z_PERFORMANCE_MASK)) | performance;
+    i2c_m.writeByte(CTRL_REG4_M, new_regv);
 }
 
 /**

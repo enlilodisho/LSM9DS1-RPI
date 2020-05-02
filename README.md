@@ -22,7 +22,7 @@ I will first begin by implementing I2C. SPI support will come later.
 * [ ] SPI Support
 * [x] Read accelerometer data
 * [x] Read gyroscope data
-* [ ] Read magnetometer data
+* [x] Read magnetometer data
 ##### Other Capabilities
 * [x] Data-ready bit
 * [x] Use FIFO feature

@@ -41,6 +41,21 @@ enum AG_ODR {
 };
 
 /**
+ * Mag ODR Setting.
+ */
+enum M_ODR {
+    M_ODR_MASK  = 0x1C,
+    M_ODR_0_625 = 0,      // 0.625 Hz
+    M_ODR_1_25  = 0x04,   // 1.25 Hz
+    M_ODR_2_5   = 0x08,   // 2.5 Hz
+    M_ODR_5     = 0x0C,   // 5 Hz
+    M_ODR_10    = 0x10,   // 10 Hz
+    M_ODR_20    = 0x14,   // 20 Hz
+    M_ODR_40    = 0x18,   // 40 Hz
+    M_ODR_80    = 0x1C    // 80 Hz
+};
+
+/**
  * Acc Scale Setting.
  */
 enum A_SCALE {
@@ -80,6 +95,31 @@ enum M_MODE {
     M_MODE_CONTINUOUS   = 0,
     M_MODE_SINGLE       = 0x01,
     M_MODE_POWERDOWN    = 0x03
+};
+
+/**
+ * Mag Temperature compensation.
+ */
+enum M_TEMP_COMPENSATE {
+    M_TEMP_COMPENSATE_MASK = 0x80
+};
+
+/**
+ * Mag Operative mode.
+ */
+enum M_XY_PERFORMANCE {
+    M_XY_PERFORMANCE_MASK       = 0x60,
+    M_XY_PERFORMANCE_LOWPOWER   = 0,
+    M_XY_PERFORMANCE_MEDIUM     = 0x20,
+    M_XY_PERFORMANCE_HIGH       = 0x40,
+    M_XY_PERFORMANCE_ULTRA      = 0x60
+};
+enum M_Z_PERFORMANCE {
+    M_Z_PERFORMANCE_MASK        = 0x0C,
+    M_Z_PERFORMANCE_LOWPOWER    = 0,
+    M_Z_PERFORMANCE_MEDIUM      = 0x04,
+    M_Z_PERFORMANCE_HIGH        = 0x08,
+    M_Z_PERFORMANCE_ULTRA       = 0x0C
 };
 
 /**
