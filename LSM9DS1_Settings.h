@@ -133,15 +133,14 @@ enum AG_STATUS {
 
 /**
  * FIFO settings. (in FIFO_CTRL)
- * TODO there are other modes in datasheet not listed here.
- *      - Continuous mode until trigger is asserted, then FIFO mode.
- *      - Bypass mode until trigger is deasserted, then Continuous mode.
  */
 enum FIFO_MODE {
-    FIFO_MODE_MASK          = 0xE0,
-    FIFO_MODE_BYPASS        = 0,
-    FIFO_MODE_ON            = 0x20,
-    FIFO_MODE_ON_CONTINUOUS = 0xC0
+    FIFO_MODE_MASK                    = 0xE0,
+    FIFO_MODE_BYPASS                  = 0,
+    FIFO_MODE_ON                      = 0x20,
+    FIFO_MODE_ON_CONTINUOUS           = 0xC0,
+    FIFO_MODE_ON_CONTINUOUS_TO_FIFO   = 0x60,
+    FIFO_MODE_ON_BYPASS_TO_CONTINUOUS = 0x80
 };
 enum FIFO_THRESHOLD {
     FIFO_THRESHOLD_MASK     = 0x1F
