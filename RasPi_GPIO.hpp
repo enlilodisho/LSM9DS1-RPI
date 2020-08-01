@@ -27,6 +27,12 @@
 #define RASPI_GPIO_HPP
 
 #include <fcntl.h> // used for open,close,etc.
+#include <unistd.h> // used for usleep
+// for exceptions:
+#include <stdexcept>
+#include <string.h>
+#include <errno.h>
+
 #include "GPIOBase.hpp"
 
 class RasPi_GPIO: public GPIOBase {
@@ -35,14 +41,16 @@ class RasPi_GPIO: public GPIOBase {
          * Exports gpio pin so that it can be used.
          */
         void init(std::string pin) {
-            write("/sys/class/gpio/export", pin);
+            writeFile("/sys/class/gpio/export", pin);
+            usleep(100000); // sleep for 100 miliseconds for export to complete
         }
 
         /**
          * Unexports gpio pin after done using.
          */
         void deinit(std::string pin) {
-            write("/sys/class/gpio/unexport", pin);
+            writeFile("/sys/class/gpio/unexport", pin);
+            usleep(100000); // sleep for 100 miliseconds for unexport to complete
         }
 
         /**
@@ -50,22 +58,22 @@ class RasPi_GPIO: public GPIOBase {
          */
         void setPinMode(std::string pin, PinMode pinMode) {
             std::string dir = "in";
-            if (pinMode == PinMode.OUTPUT) {
+            if (pinMode == OUTPUT) {
                 dir = "out";
             }
 
-            write("/sys/class/gpio/gpio"+pin+"/direction", dir);
+            writeFile("/sys/class/gpio/gpio"+pin+"/direction", dir);
         }
 
         /**
          * Gets and returns the gpio pin mode.
          */
         PinMode getPinMode(std::string pin) {
-            std::string dir = read("/sys/class/gpio/gpio"+pin+"/direction", 3);
+            std::string dir = readFile("/sys/class/gpio/gpio"+pin+"/direction", 3);
             if (dir == "out") {
-                return PinMode.OUTPUT;
+                return OUTPUT;
             }
-            return PinMode.INPUT;
+            return INPUT;
         }
 
         /**
@@ -73,38 +81,40 @@ class RasPi_GPIO: public GPIOBase {
          */
         void setPinState(std::string pin, PinState pinState) {
             std::string val = "0";
-            if (pinState == PinState.HIGH) {
+            if (pinState == HIGH) {
                 val = "1";
             }
 
-            write("/sys/class/gpio/gpio"+pin+"/value", val);
+            writeFile("/sys/class/gpio/gpio"+pin+"/value", val);
         }
 
         /**
          * Gets and returns the gpio pin state.
          */
         PinState getPinState(std::string pin) {
-            std::string state = read("/sys/class/gpio/gpio"+pin+"/value", 1);
+            std::string state = readFile("/sys/class/gpio/gpio"+pin+"/value", 1);
             if (state == "1") {
-                return PinState.HIGH;
+                return HIGH;
             }
-            return PinState.LOW;
+            return LOW;
         }
 
     private:
         /**
          * Opens file at path, then writes to it.
          */
-        void write(std::string path, std::string val) {
+        void writeFile(std::string path, std::string val) {
             // Open file.
-            int fd = open(path, O_WRONLY);
+            int fd = open(path.c_str(), O_WRONLY);
             if (fd == -1) {
-                throw "Unable to open " + path;
+                throw std::runtime_error(std::string("Unable to open "+path+". "
+                                    + strerror(errno)));
             }
 
-            if (write(fd, val.c_str(), val.length()) != val.length) {
+            if (write(fd, val.c_str(), val.length()) != val.length()) {
                 close(fd); // Close file.
-                throw "Error writing '" + val + "' to " path;
+                throw std::runtime_error(std::string("Error writing '"+val
+                                    +"' to "+path+". " + strerror(errno)));
             }
 
             // Close the file descriptor.
@@ -114,18 +124,20 @@ class RasPi_GPIO: public GPIOBase {
         /**
          * Reads from file 'n' chars.
          */
-        std::string read(std::string path, int numChars) {
+        std::string readFile(std::string path, int numChars) {
             // Open file.
-            int fd = open(path, O_RDONLY);
+            int fd = open(path.c_str(), O_RDONLY);
             if (fd == -1) {
-                throw "Unable to open " + path;
+                throw std::runtime_error(std::string("Unable to open "+path+". "
+                                    + strerror(errno)));
             }
             
             char val[numChars+1];
             int readAmt = read(fd, &val, numChars);
             if (readAmt == -1) {
                 close(fd); // Close file.
-                throw "Error reading from " + path;
+                throw std::runtime_error(std::string("Error reading from "+path+". "
+                                    + stderror(errno)));
             }
             // Add null-terminated char.
             val[readAmt] = '\0';
